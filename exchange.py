@@ -1,28 +1,20 @@
 import telebot
 import requests
 from config import TOKEN
+from config import apikey
+from currensys import currency
 
 bot = telebot.TeleBot(TOKEN)
 
-keys = {
-    'рубль': 'RUB',
-    'доллар': 'USD',
-    'евро': 'EUR',
-    'биткоин': 'BTC',
-    'фунт': 'GBP',
-    'лира': 'BTC',
-    'египет.фунт': 'EGP',
-    'бат': 'THB',
-    'бел.рубль': 'BYR',
-
-}
+keys = currency
 
 @bot.message_handler(commands=['start', 'help'])
 def handle_start_help(message):
-    instructions = "Привет! Этот бот позволяет узнать цену на определенное количество валюты.\n\n" \
+    instructions = f"Привет, {message.from_user.first_name}! Этот бот позволяет узнать цену на определенное количество валюты.\n\n" \
                    "Для получения цены используйте команду в формате:\n" \
                    "<имя валюты для конвертации> <имя валюты, в которой хотите узнать цену> <количество валюты для конвертации>\n" \
-                   "Например: `/convert доллар рубль 100`\n\n Чтоб узнать доступные валюты, введите /values"
+                   "Например: `/convert доллар рубль 100`\n\nЧтоб узнать доступные валюты, введите /values\n\n" \
+                   "Вы можете поддержать разработчика и сдалать донат \nТинькофф 2200 7005 1753 0738\n"
     bot.reply_to(message, instructions, parse_mode='Markdown')
 
 @bot.message_handler(commands=['values'])
@@ -46,7 +38,7 @@ def handle_conversion(message):
         url = f"https://api.apilayer.com/exchangerates_data/convert?to={keys[base]}&from={keys[quote]}&amount={amount}"
 
         headers = {
-            "apikey": "vN1pPvmWhtSjTeCuJBuQmT6ghDtkPAzI"
+            "apikey": apikey
         }
 
         response = requests.get(url, headers=headers)
@@ -58,7 +50,7 @@ def handle_conversion(message):
             bot.send_message(message.chat.id, f"Ошибка: {error_info}")
         else:
             converted_amount = result['result']
-            text = f'Цена {amount} {quote} в {base} - {converted_amount:.2f} {base}'
+            text = f'{message.from_user.first_name}, цена {amount} {quote} в {base} - {converted_amount:.2f} {base}'
             bot.send_message(message.chat.id, text)
     except ValueError as e:
         bot.send_message(message.chat.id, f"Ошибка: {str(e)}")
