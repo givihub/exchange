@@ -1,1 +1,2 @@
-TOKEN = '6455281883:AAE9_Zpo9stWO0SHgV4si5bvj7wMsjPJYfQ'
+TOKEN = '6455281883********************j7wMsjPJYfQ'
+apikey = 'vN1pPvmWhtS*******************6ghDtkPAzI'
