@@ -8,15 +8,22 @@ bot = telebot.TeleBot(TOKEN)
 
 keys = currency
 
-@bot.message_handler(commands=['start', 'help'])
+@bot.message_handler(commands=['start'])
 def handle_start_help(message):
     instructions = f"Привет, {message.from_user.first_name}! Этот бот позволяет узнать цену на определенное количество валюты.\n\n" \
-                   "Для получения цены используйте команду в формате:\n" \
+                   "Можно узнать курс любой мировой валюты.\n" \
+                   "Инструкции: /help\n" \
+                   "Список доступных валют: /values\n\n" \
+                   "Вы можете поддержать разработчика и сдалать донат \nТинькофф 2200 7005 1753 0738\n"
+    bot.reply_to(message, instructions, parse_mode='Markdown')
+
+@bot.message_handler(commands=['help'])
+def handle_start_help(message):
+    instructions = "Для получения цены используйте команду в формате:\n" \
                    "<имя валюты для конвертации> <имя валюты, в которой хотите узнать цену> <количество валюты для конвертации>\n" \
                    "Например: `/convert доллар рубль 100`\n\nЧтоб узнать доступные валюты, введите /values\n\n" \
                    "Вы можете поддержать разработчика и сдалать донат \nТинькофф 2200 7005 1753 0738\n"
     bot.reply_to(message, instructions, parse_mode='Markdown')
-
 @bot.message_handler(commands=['values'])
 def values(message: telebot.types.Message):
     text = 'Доступные валюты:'
